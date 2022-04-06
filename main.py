@@ -1,6 +1,7 @@
 import os
 import requests
 from dotenv import load_dotenv
+from pprint import pprint
 from urllib.parse import urlparse
 
 
@@ -14,6 +15,8 @@ def get_bitly_profile(token):
         'Authorization': f"Bearer {token}",
         'Content-Type': 'application/json',
     }
+    #data = '{ "long_url": "https://dev.bitly.com", "domain": "bit.ly", "group_guid": "Ba1bc23dE4F" }'
+    #response = requests.post('https://api-ssl.bitly.com/v4/shorten', headers=headers, data=data)
     response = requests.get(api_url, headers=headers)
     response.raise_for_status()
     return response.text
@@ -49,10 +52,22 @@ def count_clicks(token, bitlink):
     return count_clicks
 
 
+def is_bitlink(token, url):
+    url_parsed = urlparse(url)
+    api_url = f'https://api-ssl.bitly.com/v4/bitlinks/{url_parsed.netloc}{url_parsed.path}'
+    headers = {
+        'Authorization': f"Bearer {token}",
+        'Content-Type': 'application/json',
+    }
+    response = requests.get(api_url, headers=headers)
+    return response.ok
+
+
 def main():
     load_dotenv()
     #url = 'https://dvmn.org'
     #url = input('Введите url для сокращения: ')
+
     token = get_token()
     try:
         #bitlink = shorten_link(token, url)
