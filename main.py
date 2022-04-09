@@ -1,3 +1,4 @@
+import argparse
 import os
 from urllib.parse import urlparse
 
@@ -42,18 +43,21 @@ def main():
     headers = {
         'Authorization': f"Bearer {os.environ['BITLY_TOKEN']}",
     }
-    url = input('Введите ссылку: ')
+    #url = input('Введите ссылку: ')
+    parser = argparse.ArgumentParser()
+    parser.add_argument('url')
+    args = parser.parse_args()
     try:
-        check_link(url)
+        check_link(args.url)
     except:
         print('Введена некорректная ссылка')
         exit()
 
-    if is_bitlink(headers, url):
-        print(f'По вашей ссылке прошли: {count_clicks(headers, url)} раз(а)')
+    if is_bitlink(headers, args.url):
+        print(f'По вашей ссылке прошли: {count_clicks(headers, args.url)} раз(а)')
     else:
         try:
-            print('Битлинк: ', shorten_link(headers, url))
+            print('Битлинк: ', shorten_link(headers, args.url))
         except requests.exceptions.HTTPError as err:
             print(f'Ошибка при создании битлинка:\n{err}')
 
