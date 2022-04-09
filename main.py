@@ -43,7 +43,6 @@ def main():
     headers = {
         'Authorization': f"Bearer {os.environ['BITLY_TOKEN']}",
     }
-    #url = input('Введите ссылку: ')
     parser = argparse.ArgumentParser()
     parser.add_argument('url')
     args = parser.parse_args()
