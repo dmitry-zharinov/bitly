@@ -10,7 +10,8 @@ BITLY_API = 'https://api-ssl.bitly.com/v4'
 
 def check_link(url):
     response = requests.get(url)
-    response.raise_for_status()
+    if not response.ok:
+        raise requests.exceptions.HTTPError('Некорректная ссылка')
 
 
 def shorten_link(headers, url):
@@ -19,8 +20,9 @@ def shorten_link(headers, url):
         'long_url': url,
     }
     response = requests.post(api_url, headers=headers, json=data)
-    response.raise_for_status()
-    return response.json()['link']
+    if response.ok:
+        return response.json()['link']
+    raise requests.exceptions.HTTPError("Ошибка при создании битлинка")
 
 
 def count_clicks(headers, bitlink):
@@ -43,22 +45,21 @@ def main():
     headers = {
         'Authorization': f"Bearer {os.environ['BITLY_TOKEN']}",
     }
+
     parser = argparse.ArgumentParser()
     parser.add_argument('url')
     args = parser.parse_args()
+
     try:
         check_link(args.url)
-    except:
-        print('Введена некорректная ссылка')
-        exit()
-
-    if is_bitlink(headers, args.url):
-        print(f'По вашей ссылке прошли: {count_clicks(headers, args.url)} раз(а)')
-    else:
-        try:
+        if is_bitlink(headers, args.url):
+            print(f'Переходов по ссылке: {count_clicks(headers,args.url)}')
+        else:
             print('Битлинк: ', shorten_link(headers, args.url))
-        except requests.exceptions.HTTPError as err:
-            print(f'Ошибка при создании битлинка:\n{err}')
+    except requests.exceptions.HTTPError as http_err:
+        print(f'{http_err}')
+    except Exception as err:
+            print(f'Ошибка: {err}')
 
 
 if __name__ == '__main__':
