@@ -8,6 +8,8 @@ Python3 должен быть уже установлен. Для установ
 ```
 pip install -r requirements.txt
 ```
+Необходимо указать в переменной окружения *BITLY_TOKEN* токен для для работы с API Bitly, который можно получить по ссылке: https://app.bitly.com/settings/api
+
 ### Запуск
 ```
 main.py link

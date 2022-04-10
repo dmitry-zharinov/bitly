@@ -20,7 +20,7 @@ def shorten_link(headers, url):
         'long_url': url,
     }
     response = requests.post(api_url, headers=headers, json=data)
-    if response.ok:
+    if response.ok:    
         return response.json()['link']
     raise requests.exceptions.HTTPError("Ошибка при создании битлинка")
 
