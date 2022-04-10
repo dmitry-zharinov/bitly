@@ -59,7 +59,7 @@ def main():
     except requests.exceptions.HTTPError as http_err:
         print(f'{http_err}')
     except Exception as err:
-            print(f'Ошибка: {err}')
+        print(f'Ошибка: {err}')
 
 
 if __name__ == '__main__':
